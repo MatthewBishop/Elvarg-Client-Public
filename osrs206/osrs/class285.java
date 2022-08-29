@@ -72,25 +72,25 @@ public class class285 {
 																																		// 4054
 						var0.movementFrameCycle = 1; // L: 4055
 						++var0.movementFrame; // L: 4056
-						StaticSound.method2761(var8, var0.movementFrame, var0.x, var0.y); // L:
+						StaticSound.playAnimationSound(var8, var0.movementFrame, var0.x, var0.y); // L:
 																						// 4057
 					}
 					if (var0.movementFrame >= var8.frameIds.length) { // L: 4059
 						var0.movementFrameCycle = 0; // L: 4060
 						var0.movementFrame = 0; // L: 4061
-						StaticSound.method2761(var8, var0.movementFrame, var0.x, var0.y); // L:
+						StaticSound.playAnimationSound(var8, var0.movementFrame, var0.x, var0.y); // L:
 																						// 4062
 					}
 				} else if (var8.isCachedModelIdSet()) { // L: 4065
 					++var0.movementFrame; // L: 4066
 					var3 = var8.skeletalFrameCount(); // L: 4067
 					if (var0.movementFrame < var3) { // L: 4068
-						StaticSound.method5997(var8, var0.movementFrame, var0.x, var0.y); // L:
+						StaticSound.playAnimationSoundRT7(var8, var0.movementFrame, var0.x, var0.y); // L:
 						// 4069
 					} else {
 						var0.movementFrameCycle = 0; // L: 4072
 						var0.movementFrame = 0; // L: 4073
-						StaticSound.method5997(var8, var0.movementFrame, var0.x, var0.y); // L:
+						StaticSound.playAnimationSoundRT7(var8, var0.movementFrame, var0.x, var0.y); // L:
 						// 4074
 					}
 				} else {
@@ -116,7 +116,7 @@ public class class285 {
 																																						// 4088
 						var0.spotAnimationFrameCycle = 1; // L: 4089
 						++var0.spotAnimationFrame; // L: 4090
-						StaticSound.method2761(var9, var0.spotAnimationFrame, var0.x, var0.y); // L:
+						StaticSound.playAnimationSound(var9, var0.spotAnimationFrame, var0.x, var0.y); // L:
 																							// 4091
 					}
 					if (var0.spotAnimationFrame >= var9.frameIds.length && (var0.spotAnimationFrame < 0 || var0.spotAnimationFrame >= var9.frameIds.length)) { // L:
@@ -128,7 +128,7 @@ public class class285 {
 					++var0.spotAnimationFrame; // L: 4098
 					var4 = var9.skeletalFrameCount(); // L: 4099
 					if (var0.spotAnimationFrame < var4) { // L: 4100
-						StaticSound.method5997(var9, var0.spotAnimationFrame, var0.x, var0.y); // L:
+						StaticSound.playAnimationSoundRT7(var9, var0.spotAnimationFrame, var0.x, var0.y); // L:
 						// 4101
 					} else if (var0.spotAnimationFrame < 0 || var0.spotAnimationFrame >= var4) { // L:
 																									// 4104
@@ -161,7 +161,7 @@ public class class285 {
 																																	// 4125
 					var0.sequenceFrameCycle = 1; // L: 4126
 					++var0.sequenceFrame; // L: 4127
-					StaticSound.method2761(var8, var0.sequenceFrame, var0.x, var0.y); // L:
+					StaticSound.playAnimationSound(var8, var0.sequenceFrame, var0.x, var0.y); // L:
 																					// 4128
 				}
 				if (var0.sequenceFrame >= var8.frameIds.length) { // L: 4130
@@ -171,7 +171,7 @@ public class class285 {
 						var0.sequence = -1;
 					} else if (var0.sequenceFrame >= 0 && var0.sequenceFrame < var8.frameIds.length) { // L:
 																										// 4134
-						StaticSound.method2761(var8, var0.sequenceFrame, var0.x, var0.y); // L:
+						StaticSound.playAnimationSound(var8, var0.sequenceFrame, var0.x, var0.y); // L:
 																						// 4135
 					} else {
 						var0.sequence = -1;
@@ -182,7 +182,7 @@ public class class285 {
 				++var0.sequenceFrame; // L: 4140
 				var3 = var8.method3836().method2767(); // L: 4141
 				if (var0.sequenceFrame < var3) { // L: 4142
-					StaticSound.method5997(var8, var0.sequenceFrame, var0.x, var0.y); // L:
+					StaticSound.playAnimationSoundRT7(var8, var0.sequenceFrame, var0.x, var0.y); // L:
 																											// 4143
 				} else {
 					var0.sequenceFrame -= var8.frameCount; // L: 4146
@@ -191,7 +191,7 @@ public class class285 {
 						var0.sequence = -1;
 					} else if (var0.sequenceFrame >= 0 && var0.sequenceFrame < var3) { // L:
 																						// 4149
-						StaticSound.method5997(var8, var0.sequenceFrame, var0.x, var0.y); // L:
+						StaticSound.playAnimationSoundRT7(var8, var0.sequenceFrame, var0.x, var0.y); // L:
 						// 4150
 					} else {
 						var0.sequence = -1;

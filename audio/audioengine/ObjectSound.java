@@ -102,13 +102,13 @@ public final class ObjectSound extends _Node {
 				} else if (var2 < var4.y) { // L: 99
 					var5 += var4.y - var2;
 				}
-				if (var5 - 64 <= var4.field812 && StaticSound.getBridge().method2262() != 0 && var0 == var4.plane) { // L:
+				if (var5 - 64 <= var4.field812 && StaticSound.getBridge().areaSoundEffectsVolume() != 0 && var0 == var4.plane) { // L:
 					// 100
 					var5 -= 64; // L: 111
 					if (var5 < 0) { // L: 112
 						var5 = 0;
 					}
-					int var6 = (var4.field812 - var5) * StaticSound.getBridge().method2262() / var4.field812; // L:
+					int var6 = (var4.field812 - var5) * StaticSound.getBridge().areaSoundEffectsVolume() / var4.field812; // L:
 					// 113
 					if (var4.stream1 == null) { // L: 114
 						if (var4.soundEffectId >= 0) { // L: 115

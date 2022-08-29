@@ -57,7 +57,7 @@ public class WorldMapData_0 extends AbstractWorldMapData {
 		return super.regionX | super.regionY << 8; // L: 58
 	}
 	
-	static final void method4563(int var0) {
+	static final void updateSoundEffectVolume(int var0) {
 		var0 = Math.min(Math.max(var0, 0), 127); // L: 11856
 		class19.clientPreferences.updateSoundEffectVolume(var0); // L: 11857
 	} // L: 11858

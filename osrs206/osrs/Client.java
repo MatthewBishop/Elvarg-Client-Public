@@ -4412,7 +4412,7 @@ public final class Client extends GameEngine implements Usernamed, OAuthApi {
 						var20 = -1;
 					}
 					var5 = var3.method7848(); // L: 6883
-					StaticSound.method719(var20, var5); // L: 6884
+					StaticSound.playJingle(var20, var5); // L: 6884
 					var1.serverPacket = null; // L: 6885
 					return true; // L: 6886
 				}

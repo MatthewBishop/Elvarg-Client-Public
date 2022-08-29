@@ -312,36 +312,36 @@ public class class306 {
 			}
 			if (var3 == 3) { // L: 11901
 				if (var2 == 0) { // L: 11902
-					StaticSound.method5196(255);
+					StaticSound.updateMusicVolume(255);
 				}
 				if (var2 == 1) { // L: 11903
-					StaticSound.method5196(192);
+					StaticSound.updateMusicVolume(192);
 				}
 				if (var2 == 2) { // L: 11904
-					StaticSound.method5196(128);
+					StaticSound.updateMusicVolume(128);
 				}
 				if (var2 == 3) {
-					StaticSound.method5196(64); // L: 11905
+					StaticSound.updateMusicVolume(64); // L: 11905
 				}
 				if (var2 == 4) { // L: 11906
-					StaticSound.method5196(0);
+					StaticSound.updateMusicVolume(0);
 				}
 			}
 			if (var3 == 4) { // L: 11908
 				if (var2 == 0) { // L: 11909
-					WorldMapData_0.method4563(127);
+					WorldMapData_0.updateSoundEffectVolume(127);
 				}
 				if (var2 == 1) { // L: 11910
-					WorldMapData_0.method4563(96);
+					WorldMapData_0.updateSoundEffectVolume(96);
 				}
 				if (var2 == 2) { // L: 11911
-					WorldMapData_0.method4563(64);
+					WorldMapData_0.updateSoundEffectVolume(64);
 				}
 				if (var2 == 3) { // L: 11912
-					WorldMapData_0.method4563(32);
+					WorldMapData_0.updateSoundEffectVolume(32);
 				}
 				if (var2 == 4) { // L: 11913
-					WorldMapData_0.method4563(0);
+					WorldMapData_0.updateSoundEffectVolume(0);
 				}
 			}
 			if (var3 == 5) { // L: 11915

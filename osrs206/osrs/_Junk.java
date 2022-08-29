@@ -789,7 +789,7 @@ public class _Junk {
 			return 1; // L: 1899
 		} else if (var0 == ScriptOpcodes.SOUND_JINGLE) { // L: 1901
 			class446.Interpreter_intStackSize -= 2; // L: 1902
-			StaticSound.method719(Interpreter.Interpreter_intStack[class446.Interpreter_intStackSize], Interpreter.Interpreter_intStack[class446.Interpreter_intStackSize + 1]); // L:
+			StaticSound.playJingle(Interpreter.Interpreter_intStack[class446.Interpreter_intStackSize], Interpreter.Interpreter_intStack[class446.Interpreter_intStackSize + 1]); // L:
 																																												// 1903
 			return 1; // L: 1904
 		} else {
@@ -995,13 +995,13 @@ public class _Junk {
 							var5 = Math.min(Math.max(var5, 0), 100); // L: 1997
 							var6 = Math.round((float) (var5 * 255) / 100.0F); // L:
 																				// 1998
-							StaticSound.method5196(var6); // L: 1999
+							StaticSound.updateMusicVolume(var6); // L: 1999
 							break; // L: 2000
 						case 3 :
 							var5 = Math.min(Math.max(var5, 0), 100); // L: 2004
 							var6 = Math.round((float) (var5 * 127) / 100.0F); // L:
 																				// 2005
-							WorldMapData_0.method4563(var6); // L: 2006
+							WorldMapData_0.updateSoundEffectVolume(var6); // L: 2006
 							break; // L: 2007
 						case 4 :
 							var5 = Math.min(Math.max(var5, 0), 100); // L: 1985

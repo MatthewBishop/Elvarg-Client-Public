@@ -20,7 +20,7 @@ public class StaticSound {
 	public static PcmPlayer pcmPlayer1;
 	
 	public static void addSound(int var6, int var4, int var5, int i) {
-		if (StaticSound.getBridge().method2262() != 0 && var4 > 0 && StaticSound.soundEffectCount < 50) {
+		if (StaticSound.getBridge().areaSoundEffectsVolume() != 0 && var4 > 0 && StaticSound.soundEffectCount < 50) {
 			StaticSound.soundEffectIds[StaticSound.soundEffectCount] = var6; // L:
 			// 7558
 			StaticSound.queuedSoundEffectLoops[StaticSound.soundEffectCount] = var4; // L:
@@ -106,9 +106,9 @@ public class StaticSound {
 
 	public static void LoginButton() {
 		// TODO Auto-generated method stub
-		StaticSound.getBridge().method2248(!StaticSound.getBridge().method2317()); // L:
+		StaticSound.getBridge().titleMusicDisabled(!StaticSound.getBridge().titleMusicDisabled()); // L:
 		// 312
-		if (!StaticSound.getBridge().method2317()) { // L: 313
+		if (!StaticSound.getBridge().titleMusicDisabled()) { // L: 313
 			ICacheArchive var2 = StaticSound.archive6; // L: 314
 			int var3 = var2.getGroupId("scape main"); // L: 316
 			int var4 = var2.getFileId(var3, ""); // L: 317
@@ -176,10 +176,10 @@ public class StaticSound {
 						if (var8 < 0) { // L: 3673
 							var8 = 0;
 						}
-						var2 = (var3 - var8) * StaticSound.getBridge().method2262() / var3; // L:
+						var2 = (var3 - var8) * StaticSound.getBridge().areaSoundEffectsVolume() / var3; // L:
 																								// 3674
 					} else {
-						var2 = StaticSound.getBridge().method2241(); // L:
+						var2 = StaticSound.getBridge().soundEffectsVolume(); // L:
 																		// 3676
 					}
 					if (var2 > 0) { // L: 3677
@@ -219,20 +219,20 @@ public class StaticSound {
 				var12 = StaticSound.midiPcmStream.isReady(); // L: 3693
 			}
 			if (!var12) { // L: 3695
-				if (StaticSound.getBridge().method2258() != 0 && StaticSound.currentTrackGroupId != -1) { // L:
+				if (StaticSound.getBridge().musicVolume() != 0 && StaticSound.currentTrackGroupId != -1) { // L:
 																											// 3696
 					StaticSound.method2410(StaticSound.archive6, StaticSound.currentTrackGroupId, 0,
-							StaticSound.getBridge().method2258(), false);
+							StaticSound.getBridge().musicVolume(), false);
 				}
 				StaticSound.playingJingle = false; // L: 3697
 			}
 		}
 	} // L: 3700
 
-	public static final void method5196(int var0) {
+	public static final void updateMusicVolume(int var0) {
 		var0 = Math.min(Math.max(var0, 0), 255); // L: 11840
-		if (var0 != StaticSound.getBridge().method2258()) { // L: 11841
-			if (StaticSound.getBridge().method2258() == 0 && currentTrackGroupId != -1) { // L:
+		if (var0 != StaticSound.getBridge().musicVolume()) { // L: 11841
+			if (StaticSound.getBridge().musicVolume() == 0 && currentTrackGroupId != -1) { // L:
 																							// 11842
 				StaticSound.method2410(StaticSound.archive6, currentTrackGroupId, 0, var0, false); // L:
 																								// 11843
@@ -243,12 +243,12 @@ public class StaticSound {
 			} else {
 				method1005(var0); // L: 11850
 			}
-			StaticSound.getBridge().method2297(var0); // L: 11851
+			StaticSound.getBridge().musicVolume(var0); // L: 11851
 		}
 	} // L: 11853
 
-	public static void method2761(ISequenceDefinition var0, int var1, int var2, int var3) {
-		if (soundEffectCount < 50 && StaticSound.getBridge().method2262() != 0) { // L:
+	public static void playAnimationSound(ISequenceDefinition var0, int var1, int var2, int var3) {
+		if (soundEffectCount < 50 && StaticSound.getBridge().areaSoundEffectsVolume() != 0) { // L:
 			int[] soundE = var0.getSoundEffects();																		// 3703
 			if (soundE != null && var1 < soundE.length) { // L:
 																				// 3704
@@ -275,8 +275,8 @@ public class StaticSound {
 		}
 	} // L: 3722
 	
-	public static void method5997(ISequenceDefinition var0, int var1, int var2, int var3) {
-		if (soundEffectCount < 50 && StaticSound.getBridge().method2262() != 0) { // L:
+	public static void playAnimationSoundRT7(ISequenceDefinition var0, int var1, int var2, int var3) {
+		if (soundEffectCount < 50 && StaticSound.getBridge().areaSoundEffectsVolume() != 0) { // L:
 																					// 3725
 			Map skeletalSounds = var0.getSkeletalSounds();
 			if (skeletalSounds != null && skeletalSounds.containsKey(var1)) { // L:
@@ -304,10 +304,10 @@ public class StaticSound {
 		}
 	} // L: 3744
 
-	public static void method719(int var0, int var1) {
-		if (StaticSound.getBridge().method2258() != 0 && var0 != -1) { // L:
+	public static void playJingle(int var0, int var1) {
+		if (StaticSound.getBridge().musicVolume() != 0 && var0 != -1) { // L:
 																			// 3778
-			StaticSound.method2410(StaticSound.archive11, var0, 0, StaticSound.getBridge().method2258(), false); // L:
+			StaticSound.method2410(StaticSound.archive11, var0, 0, StaticSound.getBridge().musicVolume(), false); // L:
 			// 3779
 			playingJingle = true; // L: 3780
 		}
@@ -325,11 +325,11 @@ public class StaticSound {
 	public static void playSong(int var0) {
 		if (var0 == -1 && !playingJingle) { // L: 3758
 			method579(); // L: 3759
-		} else if (var0 != -1 && var0 != currentTrackGroupId && StaticSound.getBridge().method2258() != 0
+		} else if (var0 != -1 && var0 != currentTrackGroupId && StaticSound.getBridge().musicVolume() != 0
 				&& !playingJingle) { // L:
 										// 3761
 			ICacheArchive var1 = StaticSound.archive6; // L: 3762
-			int var2 = StaticSound.getBridge().method2258(); // L: 3763
+			int var2 = StaticSound.getBridge().musicVolume(); // L: 3763
 			StaticSound.musicPlayerStatus = 1; // L: 3765
 			StaticSound.musicTrackArchive = var1; // L: 3766
 			StaticSound.musicTrackGroupId = var0; // L: 3767
@@ -382,7 +382,7 @@ public class StaticSound {
 	}
 
 	public static void queueSoundEffect(int var0, int var1, int var2) {
-		if (StaticSound.getBridge().method2241() != 0 && var1 != 0 && soundEffectCount < 50) { // L:
+		if (StaticSound.getBridge().soundEffectsVolume() != 0 && var1 != 0 && soundEffectCount < 50) { // L:
 																									// 3747
 			soundEffectIds[soundEffectCount] = var0; // L: 3748
 			queuedSoundEffectLoops[soundEffectCount] = var1; // L:
@@ -431,7 +431,7 @@ public class StaticSound {
 
 	public static void update() {
 		// TODO Auto-generated method stub
-		if (!StaticSound.getBridge().method2317()) {
+		if (!StaticSound.getBridge().titleMusicDisabled()) {
 			ICacheArchive var11 = StaticSound.archive6;
 			int var8 = var11.getGroupId("scape main");
 			int var9 = var11.getFileId(var8, "");

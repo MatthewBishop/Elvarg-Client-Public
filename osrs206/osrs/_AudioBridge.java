@@ -15,32 +15,32 @@ public class _AudioBridge implements IAudioBridge {
 	}
 
 	@Override
-	public int method2262() {
+	public int areaSoundEffectsVolume() {
 		return class19.clientPreferences.method2262();
 	}
 
 	@Override
-	public int method2241() {
+	public int soundEffectsVolume() {
 		return class19.clientPreferences.method2241();
 	}
 
 	@Override
-	public int method2258() {
+	public int musicVolume() {
 		return class19.clientPreferences.method2258();
 	}
 
 	@Override
-	public boolean method2317() {
+	public boolean titleMusicDisabled() {
 		return class19.clientPreferences.method2317();
 	}
 
 	@Override
-	public void method2248(boolean var1) {
+	public void titleMusicDisabled(boolean var1) {
 		class19.clientPreferences.method2248(var1);
 	}
 
 	@Override
-	public void method2297(int var1) {
+	public void musicVolume(int var1) {
 		class19.clientPreferences.method2297(var1);	
 	}
 
