@@ -103,7 +103,136 @@ import static com.runescape.scene.SceneGraph.pitchRelaxEnabled;
 
 @Slf4j
 public class Client extends GameEngine implements RSClient {
+	
+	/* TODO Start deprecated music/sound */ 
 
+    private int prevSong;
+    private int nextSong;
+    private boolean fadeMusic = true;
+    private int currentSong = -1;
+
+    private int trackCount;
+    private final int[] trackLoops = new int[50];
+    private final int[] soundDelay = new int[50];
+    private final int[] tracks = new int[50];
+    private int currentTrackTime;
+    private long trackTimer;
+    @SuppressWarnings("unused")
+    private int currentTrackLoop;
+    private final int[] soundVolume = new int[50];
+    @SuppressWarnings("unused")
+    private int currentTrackPlaying = -1;
+    
+    public void playSong(int id) {
+        if (id != currentSong && Configuration.enableMusic && !lowMemory && prevSong == 0) {
+            nextSong = id;
+            fadeMusic = true;
+            //resourceProvider.provide(2, nextSong);
+            currentSong = id;
+        }
+    }
+
+    public void stopMidi() {
+        //if (SignLink.music != null) {
+        //     SignLink.music.stop();
+        // }
+        // SignLink.fadeMidi = 0;
+        //SignLink.midi = "stop";
+    }
+
+    private void adjustVolume(boolean updateMidi, int volume) {
+        //SignLink.setVolume(volume);
+        //if (updateMidi) {
+        //    SignLink.midi = "voladjust";
+        // }
+    }
+
+    private boolean saveWave(byte data[], int id) {
+        return false;
+        //return data == null || SignLink.wavesave(data, id);
+    }
+
+    private void saveMidi(boolean flag, byte abyte0[]) {
+        
+    }
+    
+    private void processTrackUpdates() {
+        for (int count = 0; count < trackCount; count++) {
+            boolean replay = false;
+            try {
+                Buffer stream = Track.data(trackLoops[count], tracks[count]);
+                new SoundPlayer(
+                        (InputStream) new ByteArrayInputStream(stream.payload, 0,
+                                stream.currentPosition),
+                        soundVolume[count], soundDelay[count]);
+                if (System.currentTimeMillis()
+                        + (long) (stream.currentPosition / 22) > trackTimer
+                        + (long) (currentTrackTime / 22)) {
+                    currentTrackTime = stream.currentPosition;
+                    trackTimer = System.currentTimeMillis();
+                    if (saveWave(stream.payload, stream.currentPosition)) {
+                        currentTrackPlaying = tracks[count];
+                        currentTrackLoop = trackLoops[count];
+                    } else {
+                        replay = true;
+                    }
+                }
+            } catch (Exception exception) {
+            }
+            if (!replay || soundDelay[count] == -5) {
+                trackCount--;
+                for (int index = count; index < trackCount; index++) {
+                    tracks[index] = tracks[index + 1];
+                    trackLoops[index] = trackLoops[index + 1];
+                    soundDelay[index] = soundDelay[index + 1];
+                    soundVolume[index] = soundVolume[index + 1];
+                }
+                count--;
+            } else {
+                soundDelay[count] = -5;
+            }
+        }
+
+        if (prevSong > 0) {
+            prevSong -= 20;
+            if (prevSong < 0)
+                prevSong = 0;
+            if (prevSong == 0 && Configuration.enableMusic && !lowMemory) {
+                nextSong = currentSong;
+                fadeMusic = true;
+                //resourceProvider.provide(2, nextSong);
+            }
+        }
+    }
+    
+    public void changeMusicVolume(int newVolume) {
+        boolean wasPlayingMusic = Configuration.enableMusic;
+
+        if (newVolume <= 0) {
+            Configuration.enableMusic = false;
+        } else {
+            // if (SignLink.music != null) {
+            //     adjustVolume(wasPlayingMusic, (100 * newVolume));
+            // }
+            Configuration.enableMusic = true;
+        }
+
+        if (Configuration.enableMusic != wasPlayingMusic && !lowMemory) {
+            if (Configuration.enableMusic) {
+                nextSong = currentSong;
+                fadeMusic = true;
+                //resourceProvider.provide(2, nextSong);
+            } else {
+                stopMidi();
+            }
+            prevSong = 0;
+        }
+    }
+    
+    
+    
+	/* TODO End deprecated music/sound */  
+    
     public final void init() {
         System.out.println("Init");
         nodeID = 10;
@@ -308,7 +437,6 @@ public class Client extends GameEngine implements RSClient {
             sideIconsY = {9, 7, 7, 5, 2, 3, 7, 303, 306, 306, 302, 305, 303, 304, 306},
             sideIconsId = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13},
             sideIconsTab = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
-    private final int[] soundVolume;
     private final NumberFormat format = NumberFormat.getInstance(Locale.US);
     private final int[] modeX = {160, 224, 288, 352, 416},
             modeNamesX = {26, 84, 146, 206, 278, 339, 408, 465},
@@ -355,11 +483,8 @@ public class Client extends GameEngine implements RSClient {
     private final int[] objectGroups =
             {0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3};
     private final int[] quakeAmplitudes;
-    private final int[] tracks;
     private final int[] minimapLineWidth;
     private final int[] privateMessageIds;
-    private final int[] trackLoops;
-    private final int[] soundDelay;
     private final boolean rsAlreadyLoaded;
     public CRC32 CRC = new CRC32();
     public int[] CRCs = new int[TOTAL_ARCHIVES];
@@ -441,10 +566,6 @@ public class Client extends GameEngine implements RSClient {
     private int cButtonHPos;
     private int cButtonCPos;
     private int setChannel;
-    private int currentTrackTime;
-    private long trackTimer;
-    @SuppressWarnings("unused")
-    private int currentTrackLoop;
     private String objectMaps = "", floorMaps = "";
     private int poisonType;
     private int specialAttack = 0;
@@ -463,8 +584,6 @@ public class Client extends GameEngine implements RSClient {
     private boolean specialEnabled;
     private boolean runHover, prayHover, hpHover, prayClicked,
             specialHover, expCounterHover, worldHover, autocast;
-    @SuppressWarnings("unused")
-    private int currentTrackPlaying;
 
     private int ignoreCount;
     private long loadingStartTime;
@@ -541,7 +660,6 @@ public class Client extends GameEngine implements RSClient {
     private long aLong953;
     private boolean aBoolean954;
     private long[] friendsListAsLongs;
-    private int currentSong;
     private volatile boolean drawingFlames;
     private IndexedImage titleBoxIndexedImage;
     private IndexedImage titleButtonIndexedImage;
@@ -593,7 +711,6 @@ public class Client extends GameEngine implements RSClient {
     private int multicombat;
     private Deque incompleteAnimables;
     private IndexedImage[] mapScenes;
-    private int trackCount;
     private int friendsListAction;
     private int mouseInvInterfaceIndex;
     private int lastActiveInvInterface;
@@ -685,8 +802,6 @@ public class Client extends GameEngine implements RSClient {
     private long aLong1220;
     private int hintIconNpcId;
     public int inputDialogState;
-    private int nextSong;
-    private boolean fadeMusic;
     private CollisionMap[] collisionMaps;
     private int[] mapCoordinates;
     private int[] terrainIndices;
@@ -707,7 +822,6 @@ public class Client extends GameEngine implements RSClient {
     private boolean welcomeScreenRaised;
     public boolean messagePromptRaised;
     private byte[][][] tileFlags;
-    private int prevSong;
     private int destinationX;
     private int destinationY;
     private Sprite minimapImage;
@@ -742,11 +856,9 @@ public class Client extends GameEngine implements RSClient {
     	packetSender = new PacketSender(null);
     	chatBuffer = new Buffer(new byte[5000]);
         fullscreenInterfaceID = -1;
-        soundVolume = new int[50];
         chatTypeView = 0;
         clanChatMode = 0;
         cButtonHPos = -1;
-        currentTrackPlaying = -1;
         cButtonCPos = 0;
         server = Configuration.SERVER_ADDRESS;
         anIntArrayArray825 = new int[104][104];
@@ -785,7 +897,6 @@ public class Client extends GameEngine implements RSClient {
         sideIcons = new Sprite[15];
         aBoolean954 = true;
         friendsListAsLongs = new long[200];
-        currentSong = -1;
         drawingFlames = false;
         spriteDrawX = -1;
         spriteDrawY = -1;
@@ -864,18 +975,14 @@ public class Client extends GameEngine implements RSClient {
         overlayInterfaceId = -1;
         menuActionText = new String[500];
         quakeAmplitudes = new int[5];
-        tracks = new int[50];
         anInt1210 = 2;
         anInt1211 = 78;
         promptInput = "";
         tabId = 3;
         updateChatbox = false;
-        fadeMusic = true;
         collisionMaps = new CollisionMap[4];
         privateMessageIds = new int[100];
-        trackLoops = new int[50];
         aBoolean1242 = false;
-        soundDelay = new int[50];
         rsAlreadyLoaded = false;
         welcomeScreenRaised = false;
         messagePromptRaised = false;
@@ -2147,10 +2254,6 @@ public class Client extends GameEngine implements RSClient {
         }
     }
 
-    private void saveMidi(boolean flag, byte abyte0[]) {
-        
-    }
-
     public MapRegion currentMapRegion;
 
     private void loadRegion() {
@@ -3269,30 +3372,6 @@ public class Client extends GameEngine implements RSClient {
                     setChannel = 6;
                 }
             }
-        }
-    }
-
-    public void changeMusicVolume(int newVolume) {
-        boolean wasPlayingMusic = Configuration.enableMusic;
-
-        if (newVolume <= 0) {
-            Configuration.enableMusic = false;
-        } else {
-            // if (SignLink.music != null) {
-            //     adjustVolume(wasPlayingMusic, (100 * newVolume));
-            // }
-            Configuration.enableMusic = true;
-        }
-
-        if (Configuration.enableMusic != wasPlayingMusic && !lowMemory) {
-            if (Configuration.enableMusic) {
-                nextSong = currentSong;
-                fadeMusic = true;
-                //resourceProvider.provide(2, nextSong);
-            } else {
-                stopMidi();
-            }
-            prevSong = 0;
         }
     }
 
@@ -5498,84 +5577,6 @@ public class Client extends GameEngine implements RSClient {
         crossType = 2;
         crossIndex = 0;
         return true;
-    }
-
-    public void playSong(int id) {
-        if (id != currentSong && Configuration.enableMusic && !lowMemory && prevSong == 0) {
-            nextSong = id;
-            fadeMusic = true;
-            //resourceProvider.provide(2, nextSong);
-            currentSong = id;
-        }
-    }
-
-    public void stopMidi() {
-        //if (SignLink.music != null) {
-        //     SignLink.music.stop();
-        // }
-        // SignLink.fadeMidi = 0;
-        //SignLink.midi = "stop";
-    }
-
-    private void adjustVolume(boolean updateMidi, int volume) {
-        //SignLink.setVolume(volume);
-        //if (updateMidi) {
-        //    SignLink.midi = "voladjust";
-        // }
-    }
-
-    private boolean saveWave(byte data[], int id) {
-        return false;
-        //return data == null || SignLink.wavesave(data, id);
-    }
-
-    private void processTrackUpdates() {
-        for (int count = 0; count < trackCount; count++) {
-            boolean replay = false;
-            try {
-                Buffer stream = Track.data(trackLoops[count], tracks[count]);
-                new SoundPlayer(
-                        (InputStream) new ByteArrayInputStream(stream.payload, 0,
-                                stream.currentPosition),
-                        soundVolume[count], soundDelay[count]);
-                if (System.currentTimeMillis()
-                        + (long) (stream.currentPosition / 22) > trackTimer
-                        + (long) (currentTrackTime / 22)) {
-                    currentTrackTime = stream.currentPosition;
-                    trackTimer = System.currentTimeMillis();
-                    if (saveWave(stream.payload, stream.currentPosition)) {
-                        currentTrackPlaying = tracks[count];
-                        currentTrackLoop = trackLoops[count];
-                    } else {
-                        replay = true;
-                    }
-                }
-            } catch (Exception exception) {
-            }
-            if (!replay || soundDelay[count] == -5) {
-                trackCount--;
-                for (int index = count; index < trackCount; index++) {
-                    tracks[index] = tracks[index + 1];
-                    trackLoops[index] = trackLoops[index + 1];
-                    soundDelay[index] = soundDelay[index + 1];
-                    soundVolume[index] = soundVolume[index + 1];
-                }
-                count--;
-            } else {
-                soundDelay[count] = -5;
-            }
-        }
-
-        if (prevSong > 0) {
-            prevSong -= 20;
-            if (prevSong < 0)
-                prevSong = 0;
-            if (prevSong == 0 && Configuration.enableMusic && !lowMemory) {
-                nextSong = currentSong;
-                fadeMusic = true;
-                //resourceProvider.provide(2, nextSong);
-            }
-        }
     }
 
     private void dropClient() {
