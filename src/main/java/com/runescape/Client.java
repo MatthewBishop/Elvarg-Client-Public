@@ -9077,6 +9077,7 @@ public class Client extends GameEngine implements RSClient {
                 for (int index = 0; index < 16384; index++)
                     npcs[index] = null;
                 localPlayer = players[internalLocalPlayerIndex] = new Player();
+                StaticSound.resetSoundCount();
                 projectiles.clear();
                 incompleteAnimables.clear();
                 fullscreenInterfaceID = -1;
