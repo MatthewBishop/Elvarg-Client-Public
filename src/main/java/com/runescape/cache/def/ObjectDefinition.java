@@ -7,6 +7,8 @@ import com.runescape.cache.config.VariableBits;
 import com.runescape.collection.ReferenceCache;
 import com.runescape.entity.model.Model;
 import com.runescape.io.Buffer;
+
+import adapter.IObjectComposition;
 import net.runelite.api.IterableHashTable;
 import net.runelite.api.Node;
 import net.runelite.api.ObjectComposition;
@@ -17,7 +19,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class ObjectDefinition implements ObjectComposition {
+public final class ObjectDefinition implements ObjectComposition, IObjectComposition {
 
     public static final Model[] aModelArray741s = new Model[4];
     private static final int[] OBELISK_IDS = {14829, 14830, 14827, 14828, 14826, 14831};
@@ -717,4 +719,50 @@ public final class ObjectDefinition implements ObjectComposition {
     public void setValue(int paramID, String value) {
 
     }
+
+	@Override
+	public int soundMax() {
+		return anInt2113;
+	}
+
+	@Override
+	public int soundMin() {
+		return anInt2112;
+	}
+
+	@Override
+	public int soundRange() {
+		return anInt2083;
+	}
+
+	@Override
+	public int soundId() {
+		return ambientSoundID;
+	}
+
+	@Override
+	public int sizeY() {
+		return sizeY;
+	}
+
+	@Override
+	public int sizeX() {
+		return sizeX;
+	}
+
+	@Override
+	public int[] soundIds() {
+		return ambientSoundIds;
+	}
+
+	@Override
+	public Object getTransforms() {
+		return configs;
+	}
+
+	@Override
+	public IObjectComposition transform() {
+		return method580();
+	}
+	
 }

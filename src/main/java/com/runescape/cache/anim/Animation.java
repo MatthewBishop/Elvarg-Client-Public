@@ -1,9 +1,14 @@
 package com.runescape.cache.anim;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.runescape.cache.FileArchive;
 import com.runescape.io.Buffer;
 
-public final class Animation {
+import adapter.ISequenceDefinition;
+
+public final class Animation implements ISequenceDefinition {
 
     public static Animation animations[];
     public static int anInt367;
@@ -27,9 +32,8 @@ public final class Animation {
     public int replayMode;
 
     private int skeletalId = -1;
-    private int[] skeletalsoundEffect;
+    public Map skeletalsound;
     private int[] unknown;
-    private int[] skeletalsoundRange;
     private Animation() {
         loopOffset = -1;
         stretches = false;
@@ -141,11 +145,11 @@ public final class Animation {
                 skeletalId = buffer.readInt();
             } else if (opcode == 15) {
                 int count = buffer.readUShort();
-                skeletalsoundEffect = new int[count];
-                skeletalsoundRange = new int[count];
+                this.skeletalsound = new HashMap();
                 for (int index = 0; index < count; ++index) {
-                    skeletalsoundEffect[index] = buffer.readUShort();
-                    skeletalsoundRange[index] = buffer.readTriByte();
+                    int effect = buffer.readUShort();
+                    int range = buffer.readTriByte();
+                    this.skeletalsound.put(effect, range);
                 }
             } else if (opcode == 16) {
                 skeletalRangeBegin = buffer.readUShort();
@@ -177,5 +181,15 @@ public final class Animation {
             priority = (interleaveOrder == null) ? 0 : 2;
         }
     }
+
+	@Override
+	public int[] getSoundEffects() {
+		return frameSounds;
+	}
+
+	@Override
+	public Map getSkeletalSounds() {
+		return skeletalsound;
+	}
 
 }
