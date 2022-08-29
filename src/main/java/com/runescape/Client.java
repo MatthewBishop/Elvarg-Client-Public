@@ -60,6 +60,9 @@ import com.runescape.sound.SoundPlayer;
 import com.runescape.sound.Track;
 import com.runescape.util.*;
 import com.runescape.util.zip.BZip2OutputStream;
+
+import audioengine.ObjectSound;
+import audioengine.StaticSound;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.Point;
@@ -2264,8 +2267,9 @@ public class Client extends GameEngine implements RSClient {
             projectiles.clear();
             Rasterizer3D.clearTextureCache();
             unlinkCaches();
+            StaticSound.playPcmPlayers();
             scene.initToNull();
-            System.gc();
+            System.gc();     
             for (int i = 0; i < 4; i++)
                 collisionMaps[i].setDefault();
             for (int l = 0; l < 4; l++) {
@@ -2275,8 +2279,10 @@ public class Client extends GameEngine implements RSClient {
                 }
             }
 
+            StaticSound.playPcmPlayers();
             currentMapRegion = new MapRegion(tileFlags, tileHeights);
             int k2 = terrainData.length;
+            ObjectSound.clearObjectSounds();
             packetSender.sendEmptyPacket();
 
             if (!requestMapReconstruct) {
@@ -2284,16 +2290,20 @@ public class Client extends GameEngine implements RSClient {
                     int i4 = (mapCoordinates[i3] >> 8) * 64 - regionBaseX;
                     int k5 = (mapCoordinates[i3] & 0xff) * 64 - regionBaseY;
                     byte abyte0[] = terrainData[i3];
-                    if (abyte0 != null)
+                    if (abyte0 != null) {
+                    	StaticSound.playPcmPlayers();
                         currentMapRegion.method180(abyte0, k5, i4, (currentRegionX - 6) * 8, (currentRegionY - 6) * 8,
                                 collisionMaps);
+                    }
                 }
                 for (int j4 = 0; j4 < k2; j4++) {
                     int l5 = (mapCoordinates[j4] >> 8) * 64 - regionBaseX;
                     int k7 = (mapCoordinates[j4] & 0xff) * 64 - regionBaseY;
                     byte abyte2[] = terrainData[j4];
-                    if (abyte2 == null && currentRegionY < 800)
+                    if (abyte2 == null && currentRegionY < 800) {
+                    	StaticSound.playPcmPlayers();
                         currentMapRegion.initiateVertexHeights(k7, 64, 64, l5);
+                    }
                 }
                 /*
                  * anInt1097++; if (anInt1097 > 160) { anInt1097 = 0;
@@ -2306,11 +2316,13 @@ public class Client extends GameEngine implements RSClient {
                     if (abyte1 != null) {
                         int l8 = (mapCoordinates[i6] >> 8) * 64 - regionBaseX;
                         int k9 = (mapCoordinates[i6] & 0xff) * 64 - regionBaseY;
+                        StaticSound.playPcmPlayers();
                         currentMapRegion.method190(l8, collisionMaps, k9, scene, abyte1);
                     }
                 }
             } else {
                 for (int plane = 0; plane < 4; plane++) {
+                	StaticSound.playPcmPlayers();
                     for (int x = 0; x < 13; x++) {
                         for (int y = 0; y < 13; y++) {
                             int chunkBits = constructRegionData[plane][x][y];
@@ -2342,6 +2354,7 @@ public class Client extends GameEngine implements RSClient {
 
                 packetSender.sendEmptyPacket();
                 for (int chunkZ = 0; chunkZ < 4; chunkZ++) {
+                	StaticSound.playPcmPlayers();
                     for (int chunkX = 0; chunkX < 13; chunkX++) {
                         for (int chunkY = 0; chunkY < 13; chunkY++) {
                             int tileBits = constructRegionData[chunkZ][chunkX][chunkY];
@@ -2366,6 +2379,7 @@ public class Client extends GameEngine implements RSClient {
                 requestMapReconstruct = false;
             }
             packetSender.sendEmptyPacket();
+            StaticSound.playPcmPlayers();
             currentMapRegion.createRegionScene(collisionMaps, scene);
             packetSender.sendEmptyPacket();
             int k3 = MapRegion.maximumPlane;
@@ -2382,7 +2396,7 @@ public class Client extends GameEngine implements RSClient {
                     updateGroundItems(i5, i7);
 
             }
-
+            StaticSound.playPcmPlayers();
             anInt1051++;
             if (anInt1051 > 98) {
                 anInt1051 = 0;
@@ -2431,6 +2445,7 @@ public class Client extends GameEngine implements RSClient {
             }
         }
         setGameState(GameState.LOGGED_IN);
+        StaticSound.playPcmPlayers();
     }
 
     private void unlinkCaches() {
@@ -3377,7 +3392,8 @@ public class Client extends GameEngine implements RSClient {
 
     public void updateVarp(int id) {
 
-        int parameter = VariablePlayer.variables[id].getActionId();
+    	ObjectSound.update();
+    	int parameter = VariablePlayer.variables[id].getActionId();
 
         if (parameter == 0) {
             return;
@@ -3413,7 +3429,24 @@ public class Client extends GameEngine implements RSClient {
 
         if (parameter == 3) {
 
-
+			if (state == 0) {
+				StaticSound.updateMusicVolume(255);
+			}
+			if (state == 1) {
+				StaticSound.updateMusicVolume(192);
+			}
+			if (state == 2) {
+				StaticSound.updateMusicVolume(128);
+			}
+			if (state == 3) {
+				StaticSound.updateMusicVolume(64);
+			}
+			if (state == 4) {
+				StaticSound.updateMusicVolume(0);
+			}
+			
+            /* TODO Start Deprecated, please remove */
+			
             boolean previousPlayingMusic = Configuration.enableMusic;
 
             if (state == 0) {
@@ -3460,9 +3493,11 @@ public class Client extends GameEngine implements RSClient {
                 }
                 prevSong = 0;
             }
+            /* TODO End Deprecated, please remove */
+
         }
 
-        if (parameter == 4) {
+        if (parameter == 4) {//Volume levels are 127, 96, 64, 32, 0. This is for both area sound effects and sound effects
             SoundPlayer.setVolume(state);
             if (state == 0) {
                 aBoolean848 = true;
@@ -4242,6 +4277,7 @@ public class Client extends GameEngine implements RSClient {
         scene.initToNull();
         for (int i = 0; i < 4; i++)
             collisionMaps[i].setDefault();
+        StaticSound.logout();
         Arrays.fill(chatMessages, null);
         System.gc();
         stopMidi();
@@ -15186,6 +15222,8 @@ public class Client extends GameEngine implements RSClient {
         if (Client.processGpuPlugin()) {
             drawCallbacks.draw(0);
         }
+        
+        ObjectSound.updateObjectSounds(plane, Client.localPlayer.x, Client.localPlayer.y, k2);
 
         xCameraPos = l;
         zCameraPos = i1;

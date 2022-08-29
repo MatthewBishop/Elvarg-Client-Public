@@ -11,6 +11,8 @@ import com.runescape.io.Buffer;
 import com.runescape.util.ChunkUtil;
 import com.runescape.util.ObjectKeyUtil;
 
+import audioengine.ObjectSound;
+
 public final class MapRegion {
 
     private final int[] hues;
@@ -497,6 +499,11 @@ public final class MapRegion {
         }
         key |= (long) id << 32;
         byte config = (byte) ((rotation << 6) + type);
+        
+		if (definition.hasSound()) { // L: 338
+			ObjectSound.addObjectSounds(z, x, y, definition, rotation);
+		}
+		
         if (type == 22) {
             if (lowMem && !definition.isInteractive && !definition.obstructsGround) {
                 return;

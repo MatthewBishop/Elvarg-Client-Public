@@ -765,4 +765,22 @@ public final class ObjectDefinition implements ObjectComposition, IObjectComposi
 		return method580();
 	}
 	
+	public boolean hasSound() {
+		if (this.configs == null) { // L: 436
+			return this.ambientSoundID != -1 || this.ambientSoundIds != null;
+		} else {
+			for (int var1 = 0; var1 < this.configs.length; ++var1) { // L:
+																		// 437
+				if (this.configs[var1] != -1) { // L: 438
+					ObjectDefinition var2 = lookup(this.configs[var1]); // L:
+																									// 439
+					if (var2.ambientSoundID != -1 || var2.ambientSoundIds != null) { // L:
+																					// 440
+						return true;
+					}
+				}
+			}
+			return false; // L: 443
+		}
+	}
 }
