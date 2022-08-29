@@ -1,0 +1,32 @@
+all calls to this either call StaticSound or ObjectSound
+
+ObjectSound
+clearObjectSounds
+addObjectSounds
+update
+updateObjectSounds
+
+StaticSound
+queueSoundEffect
+playSong
+method719
+method5196
+playPCMPlayers
+update
+LoginButton
+method2761
+method5997
+method5196
+pulse
+draw
+pcmPlayer
+method719
+resetSoundCount
+init
+clear
+logout
+setup
+resetSoundCount
+AddSound
+
+So basically 25 methods!!!!
